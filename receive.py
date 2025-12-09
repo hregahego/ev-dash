@@ -9,6 +9,8 @@ except OSError as e:
     print("Ensure the CAN interface is up and configured (e.g., 'sudo ip link set can0 up type can bitrate 500000')")
     exit()
 
+cache = {}
+
 while True:
     message = bus.recv()
     if message:

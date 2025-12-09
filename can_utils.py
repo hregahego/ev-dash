@@ -8,11 +8,16 @@ db = cantools.database.load_file(dbc_path);
 def encode_msg(db, msg_name, sig_values): #sig_values is a DICTIONARY
     msg = db.get_message_by_name(msg_name)
     encoded = msg.encode(sig_values)
-    return encoded
+    return msg.frame_id, encoded
 
 def decode_msg(db, msg):
     decoded = db.decode_message(msg.arbitration_id, msg.data)
     return decoded
+
+def create_msg(db, msg_name, sig_values):
+    frame_id, data = encode_msg(db, msg_name, sig_values)
+    return can.Message(arbitration_id=frame_id, data=data)
+    
 
 
 # if __name__ == "__main__":
