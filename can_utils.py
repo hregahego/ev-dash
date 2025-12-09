@@ -2,8 +2,8 @@ import cantools
 import can
 import sys
 
-dbc_path = sys.argv[1]
-db = cantools.database.load_file(dbc_path);
+# dbc_path = sys.argv[1]
+# db = cantools.database.load_file(dbc_path);
 
 def encode_msg(db, msg_name, sig_values): #sig_values is a DICTIONARY
     msg = db.get_message_by_name(msg_name)

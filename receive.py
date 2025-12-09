@@ -11,9 +11,12 @@ except OSError as e:
 
 cache = {}
 
-while True:
-    message = bus.recv()
-    if message:
-        decoded = can_utils.decode_msg(message)
-        print(decoded)
+try:
+    while True:
+        message = bus.recv()
+        if message:
+            decoded = can_utils.decode_msg(message)
+            print(decoded)
+except:
+    bus.shutdown()
 
