@@ -10,13 +10,19 @@ except OSError as e:
     exit()
 
 cache = {}
+db = cantools.database.load_file('CONTROLS.dbc')
 
 try:
     while True:
         message = bus.recv()
         if message:
-            decoded = can_utils.decode_msg(message)
-            print(decoded)
-except:
+            decoded = can_utils.decode_msg(db, message)
+            for key in decoded.keys():
+                cache[key] = decoded[key]
+            print(cache)
+except KeyboardInterrupt:
     bus.shutdown()
+except Exception as e:
+    bus.shutdown()
+    print(e)
 
