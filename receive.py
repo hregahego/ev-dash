@@ -1,6 +1,7 @@
 import can
 import cantools
 import can_utils
+from time import time
 
 try:
     bus = can.interface.Bus(channel='can0', bustype='socketcan')
@@ -11,18 +12,29 @@ except OSError as e:
 
 cache = {}
 db = cantools.database.load_file('CONTROLS.dbc')
+last_received = 0
+
+def get_message(message):
+    global last_received, cache
+
+    if time.time() - message.timestamp > 5:
+        return None
+    decoded = can_utils.decode_msg(db, message)
+    for key in decoded.keys():
+        cache[key] = decoded[key]
+    last_received = message.timestamp
+    return cache 
+    
 
 try:
     while True:
         message = bus.recv()
         if message:
-            decoded = can_utils.decode_msg(db, message)
-            for key in decoded.keys():
-                cache[key] = decoded[key]
-            print(cache)
+            print(get_message(message))
 except KeyboardInterrupt:
     bus.shutdown()
 except Exception as e:
     bus.shutdown()
     print(e)
+
 
