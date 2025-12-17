@@ -14,17 +14,22 @@ cache = {}
 db = cantools.database.load_file('CONTROLS.dbc')
 last_received = 0
 
+import time
+
 def get_message(message):
     global last_received, cache
 
     if time.time() - message.timestamp > 5:
         return None
-    decoded = can_utils.decode_msg(db, message)
-    for key in decoded.keys():
-        cache[key] = decoded[key]
-    last_received = message.timestamp
-    return cache 
     
+    decoded = can_utils.decode_msg(db, message)
+    
+    for sig, value in decoded.items():
+        cache[sig] = [value, message.timestamp]
+
+    last_received = message.timestamp
+    return cache
+
 
 try:
     while True:
