@@ -21,8 +21,11 @@ def get_message(message):
 
     if time.time() - message.timestamp > 5:
         return None
-    
-    decoded = can_utils.decode_msg(db, message)
+    try:
+        decoded = can_utils.decode_msg(db, message)
+    except SystemExit as e:
+        print("SystemExit triggered during CAN decode:", e)
+        return None
     
     for sig, value in decoded.items():
         cache[sig] = [value, message.timestamp]
@@ -43,6 +46,7 @@ try:
         message = bus.recv()
         if message:
             print(get_message(message))
+
 except KeyboardInterrupt:
     bus.shutdown()
 except Exception as e:
