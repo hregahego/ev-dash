@@ -35,7 +35,7 @@ def get_message(message):
 
 def save_cache():
     global cache
-    date = time.strftime("%m-%d")
+    date = time.strftime("%m-%d %H-%M-%S")
     with open(f'logs/{date}.txt', 'w') as f:
         for sig, (value, timestamp) in cache.items():
             f.write(f"{sig}: {value} (last updated: {time.ctime(timestamp)})\n")
