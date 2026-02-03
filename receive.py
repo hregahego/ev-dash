@@ -33,6 +33,7 @@ def get_message(message):
 
 try:
     while True:
+        print("Waiting for CAN messages...")
         message = bus.recv()
         if message:
             print(get_message(message))
