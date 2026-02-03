@@ -46,8 +46,8 @@ try:
         message = bus.recv()
         if message:
             print(get_message(message))
-
 except KeyboardInterrupt:
+    save_cache()
     bus.shutdown()
 except Exception as e:
     bus.shutdown()
