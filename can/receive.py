@@ -43,7 +43,7 @@ try:
         message = bus.recv()
         if message:
             if message is None:
-                raise Exception("-- CAN Bus Timeout --")
+                raise TimeoutError("CAN Bus Timeout")
             else:
                 print(get_message(message))
 except KeyboardInterrupt:
