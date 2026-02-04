@@ -21,12 +21,9 @@ def get_message(message):
 
     if time.time() - message.timestamp > 5:
         return None
-    try:
-        decoded = can_utils.decode_msg(db, message)
-    except SystemExit as e:
-        print("SystemExit triggered during CAN decode:", e)
-        return None
     
+    decoded = can_utils.decode_msg(db, message)
+
     for sig, value in decoded.items():
         cache[sig] = [value, message.timestamp]
 
@@ -45,7 +42,10 @@ try:
         print("Waiting for CAN messages...")
         message = bus.recv()
         if message:
-            print(get_message(message))
+            if message is None:
+                raise Exception("-- CAN Bus Timeout --")
+            else:
+                print(get_message(message))
 except KeyboardInterrupt:
     save_cache()
     bus.shutdown()
